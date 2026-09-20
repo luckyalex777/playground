@@ -1,12 +1,10 @@
 package com.alexswd.network.tcp;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.net.Socket;
-import java.net.SocketAddress;
 
 /**
  * Tor socket implementation extending {@link SocketBase}.
@@ -62,53 +60,5 @@ public class TorSocket extends SocketBase {
   private static Socket createTorSocketWithProxy(String torHost, int torPort) throws IOException {
     Proxy torProxy = new Proxy(Type.SOCKS, new InetSocketAddress(torHost, torPort));
     return new Socket(torProxy);
-  }
-
-  /**
-   * Connects to a remote address through the Tor network.
-   *
-   * @param address the remote host address
-   * @param port the remote host port
-   * @throws IOException if connection fails
-   */
-  @Override
-  public void connect(InetAddress address, int port) throws IOException {
-    socket.connect(new InetSocketAddress(address, port));
-  }
-
-  /**
-   * Connects to a remote address through the Tor network with timeout.
-   *
-   * @param address the remote host address
-   * @param port the remote host port
-   * @param timeout the connection timeout in milliseconds
-   * @throws IOException if connection fails
-   */
-  @Override
-  public void connect(InetAddress address, int port, int timeout) throws IOException {
-    socket.connect(new InetSocketAddress(address, port), timeout);
-  }
-
-  /**
-   * Connects to a remote socket address through the Tor network.
-   *
-   * @param endpoint the remote socket address
-   * @throws IOException if connection fails
-   */
-  @Override
-  public void connect(SocketAddress endpoint) throws IOException {
-    socket.connect(endpoint);
-  }
-
-  /**
-   * Connects to a remote socket address through the Tor network with timeout.
-   *
-   * @param endpoint the remote socket address
-   * @param timeout the connection timeout in milliseconds
-   * @throws IOException if connection fails
-   */
-  @Override
-  public void connect(SocketAddress endpoint, int timeout) throws IOException {
-    socket.connect(endpoint, timeout);
   }
 }
