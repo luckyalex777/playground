@@ -1,238 +1,243 @@
 package com.alexswd.network.tcp;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketOption;
 import java.nio.channels.SocketChannel;
-import java.util.Collections;
 import java.util.Set;
 
 /**
  * Base implementation of the {@link ISocket} interface.
  *
  * <p>
- * This class provides a foundation for socket implementations with stub methods. Subclasses can
- * override methods to provide concrete implementations for specific socket behavior.
+ * This class provides a delegating implementation that wraps a {@link java.net.Socket}. All methods
+ * are delegated to the underlying socket instance.
  *
  * @since 1.0
  */
 public class SocketBase implements ISocket {
 
+  @SuppressFBWarnings(value = "EI_EXPOSE_REP2",
+      justification = "Intentional delegation wrapper that stores reference to mutable Socket")
+  private final Socket socket;
+
   /**
-   * Constructs a new SocketBase instance. This is an explicit constructor for clarity and
-   * extensibility, allowing subclasses to provide their own constructor logic.
+   * Constructs a new SocketBase instance that wraps the provided socket.
+   *
+   * @param socket the underlying socket to wrap and delegate to
    */
-  @SuppressWarnings("PMD.UnnecessaryConstructor")
-  public SocketBase() {
-    // Explicit constructor for socket base implementation
+  public SocketBase(Socket socket) {
+    this.socket = socket;
   }
 
   @Override
   public void connect(InetAddress address, int port) throws IOException {
-    // Stub implementation
+    socket.connect(new java.net.InetSocketAddress(address, port));
   }
 
   @Override
   public void connect(InetAddress address, int port, int timeout) throws IOException {
-    // Stub implementation
+    socket.connect(new java.net.InetSocketAddress(address, port), timeout);
   }
 
   @Override
   public void connect(SocketAddress endpoint) throws IOException {
-    // Stub implementation
+    socket.connect(endpoint);
   }
 
   @Override
   public void connect(SocketAddress endpoint, int timeout) throws IOException {
-    // Stub implementation
+    socket.connect(endpoint, timeout);
   }
 
   @Override
   public void bind(InetAddress address, int port) throws IOException {
-    // Stub implementation
+    socket.bind(new java.net.InetSocketAddress(address, port));
   }
 
   @Override
   public void bind(SocketAddress bindpoint) throws IOException {
-    // Stub implementation
+    socket.bind(bindpoint);
   }
 
   @Override
   public InetAddress getInetAddress() {
-    return null;
+    return socket.getInetAddress();
   }
 
   @Override
   public InetAddress getLocalAddress() {
-    return null;
+    return socket.getLocalAddress();
   }
 
   @Override
   public int getPort() {
-    return 0;
+    return socket.getPort();
   }
 
   @Override
   public int getLocalPort() {
-    return 0;
+    return socket.getLocalPort();
   }
 
   @Override
   public SocketAddress getRemoteSocketAddress() {
-    return null;
+    return socket.getRemoteSocketAddress();
   }
 
   @Override
   public SocketAddress getLocalSocketAddress() {
-    return null;
+    return socket.getLocalSocketAddress();
   }
 
   @Override
   public InputStream getInputStream() throws IOException {
-    throw new IOException("Not implemented");
+    return socket.getInputStream();
   }
 
   @Override
   public OutputStream getOutputStream() throws IOException {
-    throw new IOException("Not implemented");
+    return socket.getOutputStream();
   }
 
   @Override
   public void setTcpNoDelay(boolean on) throws SocketException {
-    // Stub implementation
+    socket.setTcpNoDelay(on);
   }
 
   @Override
   public boolean getTcpNoDelay() throws SocketException {
-    return false;
+    return socket.getTcpNoDelay();
   }
 
   @Override
   public void setSoLinger(boolean on, int linger) throws SocketException {
-    // Stub implementation
+    socket.setSoLinger(on, linger);
   }
 
   @Override
   public int getSoLinger() throws SocketException {
-    return -1;
+    return socket.getSoLinger();
   }
 
   @Override
   public void setSoTimeout(int timeout) throws SocketException {
-    // Stub implementation
+    socket.setSoTimeout(timeout);
   }
 
   @Override
   public int getSoTimeout() throws SocketException {
-    return 0;
+    return socket.getSoTimeout();
   }
 
   @Override
   public void setSendBufferSize(int size) throws SocketException {
-    // Stub implementation
+    socket.setSendBufferSize(size);
   }
 
   @Override
   public int getSendBufferSize() throws SocketException {
-    return 0;
+    return socket.getSendBufferSize();
   }
 
   @Override
   public void setReceiveBufferSize(int size) throws SocketException {
-    // Stub implementation
+    socket.setReceiveBufferSize(size);
   }
 
   @Override
   public int getReceiveBufferSize() throws SocketException {
-    return 0;
+    return socket.getReceiveBufferSize();
   }
 
   @Override
   public void setReuseAddress(boolean on) throws SocketException {
-    // Stub implementation
+    socket.setReuseAddress(on);
   }
 
   @Override
   public boolean getReuseAddress() throws SocketException {
-    return false;
+    return socket.getReuseAddress();
   }
 
   @Override
   public void setKeepAlive(boolean on) throws SocketException {
-    // Stub implementation
+    socket.setKeepAlive(on);
   }
 
   @Override
   public boolean getKeepAlive() throws SocketException {
-    return false;
+    return socket.getKeepAlive();
   }
 
   @Override
   public void setTrafficClass(int tc) throws SocketException {
-    // Stub implementation
+    socket.setTrafficClass(tc);
   }
 
   @Override
   public int getTrafficClass() throws SocketException {
-    return 0;
+    return socket.getTrafficClass();
   }
 
   @Override
   public void shutdownInput() throws IOException {
-    // Stub implementation
+    socket.shutdownInput();
   }
 
   @Override
   public void shutdownOutput() throws IOException {
-    // Stub implementation
+    socket.shutdownOutput();
   }
 
   @Override
   public void close() throws IOException {
-    // Stub implementation
+    socket.close();
   }
 
   @Override
   public boolean isClosed() {
-    return false;
+    return socket.isClosed();
   }
 
   @Override
   public boolean isConnected() {
-    return false;
+    return socket.isConnected();
   }
 
   @Override
   public boolean isInputShutdown() {
-    return false;
+    return socket.isInputShutdown();
   }
 
   @Override
   public boolean isOutputShutdown() {
-    return false;
+    return socket.isOutputShutdown();
   }
 
   @Override
   public SocketChannel getChannel() {
-    return null;
+    return socket.getChannel();
   }
 
   @Override
   public <T> T getOption(SocketOption<T> name) throws IOException {
-    return null;
+    return socket.getOption(name);
   }
 
   @Override
   public <T> void setOption(SocketOption<T> name, T value) throws IOException {
-    // Stub implementation
+    socket.setOption(name, value);
   }
 
   @Override
   public Set<SocketOption<?>> supportedOptions() {
-    return Collections.emptySet();
+    return socket.supportedOptions();
   }
 }
