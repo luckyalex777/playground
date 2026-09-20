@@ -25,7 +25,7 @@ public class SocketBase implements ISocket {
 
   @SuppressFBWarnings(value = "EI_EXPOSE_REP2",
       justification = "Intentional delegation wrapper that stores reference to mutable Socket")
-  private final Socket socket;
+  protected final Socket socket;
 
   /**
    * Constructs a new SocketBase instance with a newly created socket.
