@@ -28,6 +28,15 @@ public class SocketBase implements ISocket {
   private final Socket socket;
 
   /**
+   * Constructs a new SocketBase instance with a newly created socket.
+   *
+   * @throws IOException if the socket cannot be created
+   */
+  public SocketBase() throws IOException {
+    this(new Socket());
+  }
+
+  /**
    * Constructs a new SocketBase instance that wraps the provided socket.
    *
    * @param socket the underlying socket to wrap and delegate to
