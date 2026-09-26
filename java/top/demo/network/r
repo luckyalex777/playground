@@ -1,0 +1,19 @@
+#!/bin/bash
+top=${PWD}
+app_class="com.alexswd.top.demo.network.App"
+CLASSPATH=${top}/target/network-1.0-SNAPSHOT.jar
+l4j="${top}/src/main/resources/log4j2.xml"
+if [ -f "$l4j" ] ; then
+  CLASSPATH=${CLASSPATH}:${top}/src/main/resources/log4j2.xml
+else
+  echo File "$l4j" not found
+fi
+libs=`find ${top}/target/dependency -name \*\.jar`
+for lib in $libs
+do
+    CLASSPATH=${CLASSPATH}:${lib}
+done
+#echo $CLASSPATH
+export CLASSPATH
+dt=`date +'%y%m%d%H%M%S'`
+java ${app_class} "$1" | tee app-log-${dt}.txt
