@@ -1,4 +1,4 @@
-package com.alexswd.network.http;
+package com.alexswd.top.network.http;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;

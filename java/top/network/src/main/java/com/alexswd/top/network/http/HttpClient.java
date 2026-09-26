@@ -1,7 +1,7 @@
-package com.alexswd.network.http;
+package com.alexswd.top.network.http;
 
-import com.alexswd.network.tcp.ISocket;
-import com.alexswd.network.tcp.PlainSocket;
+import com.alexswd.top.network.tcp.ISocket;
+import com.alexswd.top.network.tcp.PlainSocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

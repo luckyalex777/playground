@@ -1,4 +1,4 @@
-package com.alexswd.network.tcp;
+package com.alexswd.top.network.tcp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

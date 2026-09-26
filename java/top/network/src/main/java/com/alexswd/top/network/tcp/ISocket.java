@@ -1,4 +1,4 @@
-package com.alexswd.network.tcp;
+package com.alexswd.top.network.tcp;
 
 import java.io.IOException;
 import java.io.InputStream;

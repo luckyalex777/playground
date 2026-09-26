@@ -1,4 +1,4 @@
-package com.alexswd.network.tcp;
+package com.alexswd.top.network.tcp;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;

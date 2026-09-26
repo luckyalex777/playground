@@ -1,4 +1,4 @@
-package com.alexswd.network.http;
+package com.alexswd.top.network.http;
 
 /**
  * Represents an HTTP response with status code and body.
