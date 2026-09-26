@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -35,6 +36,28 @@ public final class HttpClient {
   /** HTTP GET method. */
   private static final String GET_METHOD = "GET";
 
+  /** Socket used for HTTP connections. */
+  private final ISocket socket;
+
+  /**
+   * Constructs an HttpClient with a default PlainSocket.
+   *
+   * @throws IOException if PlainSocket creation fails
+   */
+  public HttpClient() throws IOException {
+    this.socket = new PlainSocket();
+  }
+
+  /**
+   * Constructs an HttpClient with the provided socket implementation.
+   *
+   * @param socket the socket implementation to use
+   * @throws NullPointerException if socket is null
+   */
+  public HttpClient(ISocket socket) {
+    this.socket = Objects.requireNonNull(socket, "socket cannot be null");
+  }
+
   /**
    * Executes a GET request and returns the response.
    *
@@ -57,8 +80,6 @@ public final class HttpClient {
     // Resolve hostname to IP address
     InetAddress address = InetAddress.getByName(hostName);
 
-    // Create socket
-    ISocket socket = new PlainSocket();
     try {
       // Connect to host
       socket.connect(address, port);
