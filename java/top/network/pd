@@ -1,0 +1,12 @@
+#!/bin/bash
+top=${PWD}
+CLASSPATH=${top}/target/network-1.0-SNAPSHOT.jar
+libs=`find ${top}/target/dependency -name \*\.jar`
+for lib in $libs
+do
+    CLASSPATH=${CLASSPATH}:${lib}
+done
+#echo $CLASSPATH
+export CLASSPATH
+javadoc -d docs -sourcepath src/main/java -subpackages com.alexswd
+
