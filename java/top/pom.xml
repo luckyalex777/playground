@@ -303,5 +303,7 @@
   </build>
   <modules>
     <module>demo</module>
+    <module>network</module>
+    <module>bencode</module>
   </modules>
 </project>
