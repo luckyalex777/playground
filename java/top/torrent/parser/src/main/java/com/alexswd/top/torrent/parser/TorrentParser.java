@@ -11,9 +11,41 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+/**
+ * Utility class for parsing torrent files in the bencoded format.
+ *
+ * <p>
+ * This class provides static methods to parse torrent files and extract metadata such as announce
+ * URLs, piece information, file listings, and other torrent-specific properties. The parser decodes
+ * bencode-encoded torrent files and constructs a structured {@link TorrentInfo} object representing
+ * the torrent metadata.
+ *
+ * <p>
+ * Usage example:
+ *
+ * <pre>{@code
+ * TorrentInfo torrent = TorrentParser.parse("/path/to/file.torrent");
+ * String infoHash = torrent.getInfoHash();
+ * }</pre>
+ *
+ * @since 1.0
+ */
 public final class TorrentParser {
   private TorrentParser() {}
 
+  /**
+   * Parses a torrent file and extracts its metadata.
+   *
+   * <p>
+   * Reads the file at the specified path, decodes its bencode-encoded content, and constructs a
+   * {@link TorrentInfo} object containing all torrent metadata. The info dictionary is validated
+   * and the SHA-1 based info hash is computed.
+   *
+   * @param filePath the absolute or relative path to the torrent file
+   * @return a {@link TorrentInfo} object containing the parsed torrent metadata
+   * @throws IOException if the file cannot be read or if the file content is invalid (missing info
+   *         dictionary or other structural issues)
+   */
   public static TorrentInfo parse(String filePath) throws IOException {
     try {
       byte[] data = Files.readAllBytes(Paths.get(filePath));
@@ -24,6 +56,22 @@ public final class TorrentParser {
     }
   }
 
+  /**
+   * Builds a TorrentInfo object from decoded bencode data.
+   *
+   * <p>
+   * Extracts and validates torrent metadata from the decoded bencoded structure. Handles both
+   * single-file and multi-file torrent formats, extracts announce URLs, piece hashes, and computes
+   * the info hash.
+   *
+   * @param decoded the decoded bencode root object (should be a Map/dictionary)
+   * @param filePath the original file path for reference in the TorrentInfo object
+   * @return a fully constructed TorrentInfo object
+   * @throws IOException if the info dictionary is missing or other IO errors occur during info hash
+   *         computation
+   * @throws IllegalArgumentException if the root element is not a dictionary or if required fields
+   *         are malformed
+   */
   private static TorrentInfo buildTorrentInfo(Object decoded, String filePath) throws IOException {
     if (!(decoded instanceof Map root)) {
       throw new IllegalArgumentException("Root bencode element must be a dictionary.");
@@ -117,6 +165,17 @@ public final class TorrentParser {
         torrentFiles, computeInfoHash(root));
   }
 
+  /**
+   * Safely casts a Map with untyped keys and values to a Map with String keys and Object values.
+   *
+   * <p>
+   * Validates that all keys are Strings and all values are non-null before casting. Throws an
+   * exception if any key is not a String or if any value is null.
+   *
+   * @param map the untyped Map to cast
+   * @return a Map with String keys and Object values
+   * @throws ClassCastException if any key is not a String or if any value is null
+   */
   private static Map<String, Object> safeCast(Map<?, ?> map) {
     Map<String, Object> result = new HashMap<>();
     for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -129,6 +188,16 @@ public final class TorrentParser {
     return result;
   }
 
+  /**
+   * Converts an object to a String, handling byte arrays specially.
+   *
+   * <p>
+   * If the object is a byte array, decodes it as UTF-8. For other types, uses {@code
+   * toString()}. Returns null if the input is null.
+   *
+   * @param o the object to convert to String (may be null, a byte array, or any other type)
+   * @return the string representation, or null if the input is null
+   */
   private static String str(Object o) {
     if (o == null) {
       return null;
@@ -139,6 +208,16 @@ public final class TorrentParser {
     return o.toString();
   }
 
+  /**
+   * Converts a byte array to its hexadecimal string representation.
+   *
+   * <p>
+   * Each byte is converted to a two-digit hexadecimal string (lowercase), and all bytes are
+   * concatenated into a single string.
+   *
+   * @param bytes the byte array to convert
+   * @return the hexadecimal representation of the bytes
+   */
   private static String bytesToHex(byte[] bytes) {
     StringBuilder sb = new StringBuilder(bytes.length * 2);
     for (byte b : bytes) {
@@ -147,6 +226,20 @@ public final class TorrentParser {
     return sb.toString();
   }
 
+  /**
+   * Computes the SHA-1 based info hash of a torrent.
+   *
+   * <p>
+   * Encodes the info dictionary (the value of the "info" key) using bencode encoding, then computes
+   * its SHA-1 hash. The info hash uniquely identifies the torrent and is used in peer-to-peer
+   * network communication.
+   *
+   * @param root the decoded torrent dictionary
+   * @return the hexadecimal representation of the SHA-1 info hash
+   * @throws IOException if the "info" key is missing or if encoding/hashing fails
+   * @throws NoSuchAlgorithmException if the SHA-1 algorithm is not available (should not occur on
+   *         standard JVMs)
+   */
   private static String computeInfoHash(Map<String, Object> root) throws IOException {
     if (!root.containsKey("info")) {
       throw new IOException("Info dictionary not found");
